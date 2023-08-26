@@ -1,10 +1,18 @@
 import React, { useState, useRef } from "react";
 import { checkValidateData } from "../utils/validate";
+import { auth } from "../utils/firebase";
+import Header from "./Header";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState();
   const email = useRef(null);
   const password = useRef(null);
+  const navigate = useNavigate();
   const handleClick = () => {
     setIsSignIn(!isSignIn);
   };
@@ -15,10 +23,44 @@ const Login = () => {
       password.current.value
     );
     setErrorMessage(message);
-    console.log(message);
+    if (message) return;
+    if (!isSignIn) {
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigate("browse");
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigate("browse");
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    }
   };
   return (
     <div>
+      <Header />
       <div className="absolute">
         <img
           src="https://assets.nflxext.com/ffe/siteui/vlv3/00103100-5b45-4d4f-af32-342649f1bda5/64774cd8-5c3a-4823-a0bb-1610d6971bd4/IN-en-20230821-popsignuptwoweeks-perspective_alpha_website_large.jpg"
@@ -63,7 +105,7 @@ const Login = () => {
             }}
             className="mx-7 mt-3"
           >
-            New to Netflix? {isSignIn ? "Sign In" : "Sign Up"} now
+            New to Netflix? {isSignIn ? "Sign Up" : "Sign In"} now
           </p>
         </form>
       </div>
