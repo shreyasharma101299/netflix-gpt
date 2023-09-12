@@ -10,7 +10,9 @@ import {
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { BG_IMAGE } from "../utils/constants";
+import { useTranslation } from "react-i18next";
 const Login = () => {
+  const { t } = useTranslation();
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMessage, setErrorMessage] = useState();
   const email = useRef(null);
@@ -85,35 +87,35 @@ const Login = () => {
       <div className="p-10 py-14 text-white w-1/5 bg-black absolute  items-center mx-auto my-36 right-0 left-0 bg-opacity-80 w-96">
         <form onSubmit={(e) => e.preventDefault()} className="flex flex-col">
           <h1 className="p-2 mx-7 text-2xl font-bold">
-            {isSignIn ? "Sign In" : "Sign Up"}
+            {isSignIn ? t("signIn") : t("signUp")}
           </h1>
           {!isSignIn && (
             <input
               ref={name}
               className="mx-7 my-4 mt-7 p-2 bg-slate-600 "
               type="text"
-              placeholder="Full Name"
+              placeholder={t("fullName")}
             />
           )}
           <input
             ref={email}
             className="mx-7 my-4 mt-7 p-2 bg-slate-600 "
             type="text"
-            placeholder="Email Address"
+            placeholder={t("email")}
           />
 
           <input
             ref={password}
             className="mx-7  my-4 p-2 bg-slate-600  "
             type="password"
-            placeholder="Password"
+            placeholder={t("password")}
           />
           {errorMessage && <p className="mx-7 text-red-500">{errorMessage}</p>}
           <button
             onClick={() => validateForm()}
             className="bg-red-600 p-2  mx-7 mt-7 rounded-lg cursor-pointer"
           >
-            {isSignIn ? "Sign In" : "Sign Up"}
+            {isSignIn ? t("signIn") : t("signUp")}
           </button>
           <p
             onClick={() => {
@@ -121,7 +123,7 @@ const Login = () => {
             }}
             className="mx-7 mt-3"
           >
-            New to Netflix? {isSignIn ? "Sign Up" : "Sign In"} now
+            {isSignIn ? t("newToNetflix") : t("haveAnAccount")}
           </p>
         </form>
       </div>

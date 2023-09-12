@@ -13,7 +13,6 @@ const useUpcomingMovies = () => {
       API_OPTIONS
     );
     const json = await movies.json();
-    console.log(json.results);
     dispatch(addUpcomingMovies(json.results));
   };
   useEffect(() => {

@@ -5,8 +5,11 @@ import { useRef } from "react";
 import { openai } from "../utils/openai";
 import { API_OPTIONS } from "../utils/constants";
 import { addGptMovieResult } from "../utils/gptSlice";
+import { useTranslation } from "react-i18next";
+
 const GptSearchBar = () => {
   const searchText = useRef(null);
+  const { t } = useTranslation();
   const language = useSelector((store) => store.config.lang);
   const dispatch = useDispatch();
   const searchMovieTMDB = async (movie) => {
@@ -32,7 +35,6 @@ const GptSearchBar = () => {
     const recommendedMovies = data.choices?.[0]?.message?.content.split(",");
     const gptMovie = recommendedMovies.map((movie) => searchMovieTMDB(movie));
     const tmdbMovies = await Promise.all(gptMovie);
-    console.log(tmdbMovies);
     dispatch(
       addGptMovieResult({
         movieNames: recommendedMovies,
@@ -50,13 +52,13 @@ const GptSearchBar = () => {
           ref={searchText}
           className="p-2 m-2 min-w-fit col-span-10 "
           type="text"
-          placeholder={lang[language].gptSearchPlaceholder}
+          placeholder={t("searchInfo")}
         />
         <button
           className=" px-4 bg-red-500 text-white col-span-2 rounded-lg "
           onClick={handleSearchClick}
         >
-          {lang[language].search}
+          {t("search")}
         </button>
       </form>
     </div>
